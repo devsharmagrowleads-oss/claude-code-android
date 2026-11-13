@@ -39,7 +39,7 @@
       <path d="M23 25 l5.5 4.5 -5.5 4.5" fill="none" stroke="#3DDC84" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
       <rect x="30" y="33" width="8" height="3" rx="1.5" fill="#E8F1FF"/>
     </g>
-    <text x="150" y="101" class="sans" font-size="15" font-weight="600" letter-spacing="2.6" fill="#8FA3BF">OPEN SOURCE  ·  UNOFFICIAL</text>
+    <text x="150" y="101" class="sans" font-size="15" font-weight="600" letter-spacing="2.6" fill="#8FA3BF">OPEN SOURCE</text>
 
     <!-- title -->
     <text x="72" y="212" class="mono" font-size="60" font-weight="700" fill="#F4F8FF">claude-code-<tspan fill="#3DDC84">android</tspan></text>
