@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# A stand-in for adb, used by tests/test-entry.sh. It never touches a phone.
+# State lives in $FAKE_ADB_DIR:
+#   devices.1, devices.2, ...   what 'adb devices' lists on the 1st, 2nd, ... call
+#                               (the last file is reused for later calls)
+#   preflight.rc / install.rc / remove.rc
+#                               exit codes for setup.sh calls, one per call, space separated
+#   state                       what 'adb get-state' prints (default: device)
+#   calls.log                   every call made, for the tests to inspect
+D=${FAKE_ADB_DIR:?}
+echo "$*" >> "$D/calls.log"
+[ "${1:-}" = -s ] && shift 2
+
+next_code() {   # pop the next exit code for a setup.sh mode
+  local f=$D/$1.rc code rest
+  [ -f "$f" ] || { echo 0; return; }
+  read -r code rest < "$f"
+  [ -n "$rest" ] && echo "$rest" > "$f"
+  echo "${code:-0}"
+}
+
+case "${1:-}" in
+  devices)
+    n=$(( $(cat "$D/devices.n" 2>/dev/null || echo 0) + 1 )); echo "$n" > "$D/devices.n"
+    while [ "$n" -gt 1 ] && [ ! -f "$D/devices.$n" ]; do n=$((n - 1)); done
+    echo "List of devices attached"
+    cat "$D/devices.$n" 2>/dev/null
+    echo ;;
+  get-state) cat "$D/state" 2>/dev/null || echo device ;;
+  push) echo "1 file pushed" ;;
+  shell)
+    case "$2" in
+      *"setup.sh preflight"*) echo "(fake phone: preflight)"; exit "$(next_code preflight)" ;;
+      *"setup.sh install"*) echo "(fake phone: install)"; exit "$(next_code install)" ;;
+      *"setup.sh remove"*) echo "(fake phone: remove)"; exit "$(next_code remove)" ;;
+      getprop*) echo "FakePhone" ;;
+    esac ;;
+esac
+exit 0

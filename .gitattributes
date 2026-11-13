@@ -1,0 +1,9 @@
+# Scripts that run on the phone or under bash must keep Unix line endings,
+# even when the repo is checked out on Windows.
+*.sh        text eol=lf
+*.env       text eol=lf
+tests/fake-adb text eol=lf
+tests/stubs/* text eol=lf
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+*.ps1       text eol=crlf

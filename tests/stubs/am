@@ -1,0 +1,4 @@
+#!/bin/sh
+# Test stand-in for Android's am.
+[ "$1" = get-current-user ] && echo "${F_USER-0}"
+exit 0

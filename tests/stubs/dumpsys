@@ -1,0 +1,14 @@
+#!/bin/sh
+# Test stand-in for dumpsys. F_NET: wifi | mobile | none | unknown
+case "$1" in
+  package) [ "${F_TERMUX-absent}" = foreign ] || echo "    pkgFlags=[ DEBUGGABLE HAS_CODE ]" ;;
+  connectivity)
+    case "${F_NET-wifi}" in
+      none) echo "Active default network: none" ;;
+      wifi) echo "Active default network: 106"
+            echo "  NetworkAgentInfo{network{106}  handle{1}  ni{WIFI CONNECTED extra: } }" ;;
+      mobile) echo "Active default network: 101"
+              echo "  NetworkAgentInfo{network{101}  handle{1}  ni{MOBILE[NR] CONNECTED extra: ims} }" ;;
+    esac ;;
+esac
+exit 0

@@ -1,0 +1,4 @@
+#!/bin/sh
+# Test stand-in for Android's pm. F_TERMUX: absent | foreign | broken | ours | unmarked | empty
+[ "$1" = path ] && [ "${F_TERMUX-absent}" != absent ] && echo "package:/data/app/com.termux/base.apk"
+exit 0

@@ -1,0 +1,7 @@
+.tools/
+.cache/
+logs/
+
+# Internal planning notes, kept out of the public repo.
+docs/brainstorms/
+docs/plans/
