@@ -1,8 +1,42 @@
-# claude-code-android
+<p align="center">
+  <img src="assets/banner.svg" alt="claude-code-android: Claude Code on your Android phone. One command from your laptop. No typing on the phone." width="100%">
+</p>
+
+<p align="center">
+  <a href="https://github.com/devsharmagrowleads-oss/claude-code-android/actions/workflows/ci.yml"><img src="https://github.com/devsharmagrowleads-oss/claude-code-android/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
+  <img src="https://img.shields.io/badge/phone-Android%207%2B-3DDC84?labelColor=0A1120" alt="Android 7 or newer">
+  <img src="https://img.shields.io/badge/laptop-Windows%20%C2%B7%20macOS%20%C2%B7%20Linux-3DDC84?labelColor=0A1120" alt="Windows, macOS and Linux">
+  <img src="https://img.shields.io/badge/root-not%20needed-3DDC84?labelColor=0A1120" alt="No root needed">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-3DDC84?labelColor=0A1120" alt="MIT license"></a>
+</p>
+
+<p align="center">
+  <a href="#install"><b>Install</b></a> &nbsp;·&nbsp;
+  <a href="#what-you-do-by-hand">What you do by hand</a> &nbsp;·&nbsp;
+  <a href="#what-it-changes-on-the-phone">What it changes</a> &nbsp;·&nbsp;
+  <a href="#remove">Remove</a> &nbsp;·&nbsp;
+  <a href="#troubleshooting">Troubleshooting</a> &nbsp;·&nbsp;
+  <a href="docs/usb-debugging.md">USB debugging guide</a>
+</p>
+
+<br>
 
 Put [Claude Code](https://code.claude.com) on an Android phone by plugging it into a laptop and running one command. Nothing is typed on the phone during the install, and the laptop is not needed afterwards.
 
+<p align="center">
+  <img src="assets/steps.svg" alt="Three steps: plug in the phone, run the installer, sign in on the phone." width="100%">
+</p>
+
+> [!NOTE]
 > Unofficial community project. Not made, endorsed or supported by Anthropic. "Claude" and "Claude Code" are Anthropic's trademarks.
+
+## Why this one
+
+- **The laptop does the typing.** Other guides have you type dozens of commands on a phone keyboard. Here the laptop sets everything up over the cable.
+- **It explains itself.** The installer fetches the Android tool it needs, waits for the phone, and tells you in plain words what to tap.
+- **Safe to run again.** A pulled cable or dropped Wi-Fi is fine: run it again and it carries on. On a working install it changes nothing.
+- **It asks first.** An existing Termux is never touched or replaced without your say-so.
+- **It cleans up.** One command removes what it added and puts the phone's settings back.
 
 ## What you need
 
@@ -68,7 +102,9 @@ This removes the Linux guest, the `claude` command and the start-up hook, and pu
 
 ## Things to know
 
-- **The Termux build used here can be read by any computer you allow for USB debugging.** It is the build from Termux's GitHub page, which is the only one a laptop can set up. With it, a computer you have tapped "Allow" for can read Termux's files, including your Claude sign-in. Switch USB debugging off when you are done (Claude Code keeps working), and only tap "Allow" on computers you trust.
+> [!IMPORTANT]
+> **The Termux build used here can be read by any computer you allow for USB debugging.** It is the build from Termux's GitHub page, which is the only one a laptop can set up. With it, a computer you have tapped "Allow" for can read Termux's files, including your Claude sign-in. Switch USB debugging off when you are done (Claude Code keeps working), and only tap "Allow" on computers you trust.
+
 - **Lifting the background-process limit** lets apps keep more background programs running, which can cost some battery. Uninstalling puts it back.
 - **It is slower than on a laptop.** Claude Code runs inside a Linux guest, which adds overhead, mostly on tasks that touch many files.
 - **Android may still stop Termux** on phones with aggressive battery saving. If sessions die when the screen is off, set Termux's battery use to "Unrestricted" in the phone's app settings.

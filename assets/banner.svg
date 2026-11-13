@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 420" width="1280" height="420" role="img" aria-label="claude-code-android: Claude Code on your Android phone. One command from your laptop.">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0A1120"/>
+      <stop offset="1" stop-color="#101C33"/>
+    </linearGradient>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3DDC84"/>
+      <stop offset="1" stop-color="#12B5A6"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#3DDC84" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#3DDC84" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#FFFFFF" fill-opacity="0.05"/>
+    </pattern>
+    <clipPath id="card"><rect width="1280" height="420" rx="28"/></clipPath>
+    <style>
+      .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+      .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
+      .cursor { animation: blink 1.1s steps(1) infinite; }
+      @keyframes blink { 50% { opacity: 0; } }
+      .pulse { animation: travel 2.6s linear infinite; }
+      @keyframes travel { from { stroke-dashoffset: 260; } to { stroke-dashoffset: 0; } }
+      @media (prefers-reduced-motion: reduce) { .cursor, .pulse { animation: none; } }
+    </style>
+  </defs>
+
+  <g clip-path="url(#card)">
+    <rect width="1280" height="420" fill="url(#bg)"/>
+    <rect width="1280" height="420" fill="url(#dots)"/>
+    <circle cx="1060" cy="210" r="330" fill="url(#glow)"/>
+
+    <!-- mark + label -->
+    <g transform="translate(72 64)">
+      <rect width="60" height="60" rx="15" fill="url(#mark)"/>
+      <rect x="17.5" y="8.5" width="25" height="43" rx="6" fill="#07111F"/>
+      <path d="M23 25 l5.5 4.5 -5.5 4.5" fill="none" stroke="#3DDC84" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="30" y="33" width="8" height="3" rx="1.5" fill="#E8F1FF"/>
+    </g>
+    <text x="150" y="101" class="sans" font-size="15" font-weight="600" letter-spacing="2.6" fill="#8FA3BF">OPEN SOURCE  ·  UNOFFICIAL</text>
+
+    <!-- title -->
+    <text x="72" y="212" class="mono" font-size="60" font-weight="700" fill="#F4F8FF">claude-code-<tspan fill="#3DDC84">android</tspan></text>
+
+    <!-- tagline -->
+    <text x="72" y="266" class="sans" font-size="27" fill="#C5D1E3">Claude Code on your Android phone.</text>
+    <text x="72" y="303" class="sans" font-size="27" fill="#8FA3BF">One command from your laptop. No typing on the phone.</text>
+
+    <!-- pills -->
+    <g class="sans" font-size="15" font-weight="600" fill="#C5D1E3">
+      <rect x="72" y="334" width="104" height="36" rx="18" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14"/>
+      <text x="124" y="357" text-anchor="middle">Windows</text>
+      <rect x="188" y="334" width="88" height="36" rx="18" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14"/>
+      <text x="232" y="357" text-anchor="middle">macOS</text>
+      <rect x="288" y="334" width="80" height="36" rx="18" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14"/>
+      <text x="328" y="357" text-anchor="middle">Linux</text>
+      <rect x="380" y="334" width="96" height="36" rx="18" fill="#3DDC84" fill-opacity="0.12" stroke="#3DDC84" stroke-opacity="0.45"/>
+      <text x="428" y="357" text-anchor="middle" fill="#3DDC84">No root</text>
+    </g>
+
+    <!-- cable -->
+    <path d="M1055 372 C1055 420 980 392 900 420" fill="none" stroke="#24344F" stroke-width="5" stroke-linecap="round"/>
+    <path class="pulse" d="M1055 372 C1055 420 980 392 900 420" fill="none" stroke="#3DDC84" stroke-width="5" stroke-linecap="round" stroke-dasharray="26 234"/>
+
+    <!-- phone -->
+    <g transform="translate(930 44)">
+      <rect width="250" height="332" rx="36" fill="#060B15" stroke="#2B3D5C" stroke-width="3"/>
+      <rect x="100" y="14" width="50" height="7" rx="3.5" fill="#1B2A44"/>
+      <g class="mono" font-size="15">
+        <text x="26" y="66" fill="#5E728F">~ $ install</text>
+        <g fill="none" stroke="#3DDC84" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M27 96 l5 5 9 -10"/>
+          <path d="M27 128 l5 5 9 -10"/>
+          <path d="M27 160 l5 5 9 -10"/>
+          <path d="M27 192 l5 5 9 -10"/>
+        </g>
+        <text x="52" y="103" fill="#C5D1E3">Phone checked</text>
+        <text x="52" y="135" fill="#C5D1E3">Termux</text>
+        <text x="52" y="167" fill="#C5D1E3">Linux guest</text>
+        <text x="52" y="199" fill="#C5D1E3">Claude Code</text>
+        <line x1="26" y1="224" x2="224" y2="224" stroke="#1B2A44" stroke-width="1.5"/>
+        <text x="26" y="258" fill="#3DDC84" font-weight="700">~ $ <tspan fill="#F4F8FF">claude</tspan></text>
+        <rect class="cursor" x="126" y="244" width="9" height="18" fill="#3DDC84"/>
+      </g>
+      <rect x="95" y="310" width="60" height="5" rx="2.5" fill="#2B3D5C"/>
+    </g>
+  </g>
+</svg>
