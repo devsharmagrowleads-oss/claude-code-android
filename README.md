@@ -86,7 +86,7 @@ This removes the Linux guest, the `claude` command and the start-up hook, and pu
 
 ## Status
 
-- Confirmed: Windows 10 laptop with a OnePlus Nord CE (Android 13).
+- Confirmed: Windows 10 laptop with a OnePlus Nord CE (Android 13). A fresh install took under 4 minutes on Wi-Fi.
 - macOS and Linux: the installer runs the same steps on the phone, and its laptop side is covered by automated tests, but it has not yet been confirmed on real hardware. Reports are welcome.
 
 ## How it works

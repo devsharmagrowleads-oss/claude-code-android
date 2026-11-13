@@ -169,6 +169,8 @@ install_termux() {
 
 wait_for_unlock() {
   input keyevent KEYCODE_WAKEUP 2>/dev/null
+  wm dismiss-keyguard >/dev/null 2>&1   # opens a swipe-only lock; does nothing against a PIN
+  sleep 1
   locked || return 0
   echo "Unlock your phone to continue (waiting up to 2 minutes)..."
   n=0
@@ -260,8 +262,14 @@ termux_busy() {
 # something already running in Termux.
 open_claude() {
   how="Open the Termux app on the phone and type: claude"
+  input keyevent KEYCODE_WAKEUP 2>/dev/null
+  wm dismiss-keyguard >/dev/null 2>&1
+  sleep 1
   if locked; then echo "The phone is locked. $how"; return; fi
   if [ -n "$(pidof "$PKG")" ]; then
+    if in_termux ps -A -o ARGS 2>/dev/null | grep -q '^claude'; then
+      echo "Claude Code is already open in Termux on the phone."; return
+    fi
     if termux_busy; then echo "Termux is busy with something else. $how"; return; fi
     am force-stop "$PKG"
   fi

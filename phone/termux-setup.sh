@@ -38,7 +38,7 @@ quiet() {
   "$@" >>"$LOG" 2>&1 </dev/null &
   local pid=$! waited=0
   while kill -0 "$pid" 2>/dev/null; do
-    sleep 5
+    /system/bin/sleep 5   # Android's own: Termux's can be mid-upgrade
     waited=$((waited + 5))
     if [ $((waited % 30)) -eq 0 ]; then echo "  ...still working ($((waited / 60)) min $((waited % 60)) s)"; fi
   done
@@ -50,7 +50,7 @@ retry() {
   local n
   for n in 1 2 3; do
     quiet "$@" && return 0
-    [ "$n" -lt 3 ] && { echo "  That did not work; trying again..."; sleep 5; }
+    [ "$n" -lt 3 ] && { echo "  That did not work; trying again..."; /system/bin/sleep 5; }
   done
   return 1
 }
