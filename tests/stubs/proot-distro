@@ -1,0 +1,22 @@
+#!/bin/sh
+# Fake Termux: proot-distro. Guests are folders; "Claude Code" is a marker file.
+#   F_FAIL_DOWNLOAD / F_FAIL_ROOT / F_FAIL_USER=1 make that step fail.
+echo "proot-distro $*" >> "$F_ROOT/calls"
+guests=$PREFIX/var/lib/proot-distro/containers
+case "$1" in
+  install)
+    case "$2" in --help) [ -e "$F_ROOT/proot-current" ] && echo "  -n, --name [NAME]" >&2; exit 0 ;; esac
+    [ "${F_FAIL_DOWNLOAD-0}" = 1 ] && exit 1
+    mkdir -p "$guests/$3" ;;
+  remove) rm -rf "${guests:?}/$2" ;;
+  kill) ;;
+  login)
+    guest=$guests/$2
+    [ -d "$guest" ] || exit 1
+    case "$*" in
+      *"guest-setup.sh root") [ "${F_FAIL_ROOT-0}" = 1 ] && exit 1; touch "$guest/packages" ;;
+      *"guest-setup.sh user") [ "${F_FAIL_USER-0}" = 1 ] && exit 1; touch "$guest/claude" ;;
+      *"claude --version") [ -e "$guest/claude" ] && echo "9.9.9 (Claude Code)" || exit 127 ;;
+    esac ;;
+esac
+exit 0

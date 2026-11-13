@@ -5,24 +5,33 @@
 #                               (the last file is reused for later calls)
 #   preflight.rc / install.rc / remove.rc
 #                               exit codes for setup.sh calls, one per call, space separated
+#   legacy                      if present, behave like an old adb: always exit 0
+#   cut                         if present, setup.sh output ends without its last line
+#   slow                        if present, 'install' pauses 4 s after its first line
 #   state                       what 'adb get-state' prints (default: device)
 #   calls.log                   every call made, for the tests to inspect
 D=${FAKE_ADB_DIR:?}
 echo "$*" >> "$D/calls.log"
 [ "${1:-}" = -s ] && shift 2
 
-next_code() {   # pop the next exit code for a setup.sh mode
-  local f=$D/$1.rc code rest
-  [ -f "$f" ] || { echo 0; return; }
-  read -r code rest < "$f"
+# Print what setup.sh would, ending with its CCA_EXIT line, and exit like adb.
+phone() {
+  local f=$D/$1.rc code=0 rest=""
+  [ -f "$f" ] && read -r code rest < "$f"
   [ -n "$rest" ] && echo "$rest" > "$f"
-  echo "${code:-0}"
+  echo "(fake phone: $1)"
+  [ "$1" = install ] && [ -e "$D/slow" ] && sleep 4
+  [ -e "$D/cut" ] && exit 1
+  echo "CCA_EXIT=${code:-0}"
+  [ -e "$D/legacy" ] && exit 0
+  exit "${code:-0}"
 }
 
 case "${1:-}" in
   devices)
     n=$(( $(cat "$D/devices.n" 2>/dev/null || echo 0) + 1 )); echo "$n" > "$D/devices.n"
     while [ "$n" -gt 1 ] && [ ! -f "$D/devices.$n" ]; do n=$((n - 1)); done
+    echo "* daemon not running; starting now at tcp:5037"
     echo "List of devices attached"
     cat "$D/devices.$n" 2>/dev/null
     echo ;;
@@ -30,9 +39,9 @@ case "${1:-}" in
   push) echo "1 file pushed" ;;
   shell)
     case "$2" in
-      *"setup.sh preflight"*) echo "(fake phone: preflight)"; exit "$(next_code preflight)" ;;
-      *"setup.sh install"*) echo "(fake phone: install)"; exit "$(next_code install)" ;;
-      *"setup.sh remove"*) echo "(fake phone: remove)"; exit "$(next_code remove)" ;;
+      *"setup.sh preflight"*) phone preflight ;;
+      *"setup.sh install"*) phone install ;;
+      *"setup.sh remove"*) phone remove ;;
       getprop*) echo "FakePhone" ;;
     esac ;;
 esac

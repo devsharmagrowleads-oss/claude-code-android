@@ -1,7 +1,8 @@
 #!/bin/sh
-# Test stand-in for dumpsys. F_NET: wifi | mobile | none | unknown
+# Fake phone: dumpsys. F_NET: wifi | mobile | none | odd | unknown. F_LOCKED=1 locks the screen.
 case "$1" in
-  package) [ "${F_TERMUX-absent}" = foreign ] || echo "    pkgFlags=[ DEBUGGABLE HAS_CODE ]" ;;
+  package) [ "$(cat "$F_ROOT/kind" 2>/dev/null)" = foreign ] || echo "    pkgFlags=[ DEBUGGABLE HAS_CODE ]" ;;
+  window) [ "${F_LOCKED-0}" = 1 ] && echo "    isKeyguardShowing=true" ;;
   connectivity)
     case "${F_NET-wifi}" in
       none) echo "Active default network: none" ;;
@@ -9,6 +10,8 @@ case "$1" in
             echo "  NetworkAgentInfo{network{106}  handle{1}  ni{WIFI CONNECTED extra: } }" ;;
       mobile) echo "Active default network: 101"
               echo "  NetworkAgentInfo{network{101}  handle{1}  ni{MOBILE[NR] CONNECTED extra: ims} }" ;;
+      odd) echo "Active default network: 107"
+           echo "  NetworkAgentInfo{network{107}  handle{1}  ni{ETHERNET CONNECTED extra: } }" ;;
     esac ;;
 esac
 exit 0

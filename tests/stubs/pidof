@@ -1,0 +1,4 @@
+#!/bin/sh
+# Fake phone: pidof. Termux counts as running once it has been opened.
+[ -e "$F_ROOT/running" ] && echo 4242
+exit 0

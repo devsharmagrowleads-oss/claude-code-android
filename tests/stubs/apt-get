@@ -1,0 +1,5 @@
+#!/bin/sh
+# Fake Termux: apt-get. Installing proot-distro makes the fake one "current".
+echo "apt-get $*" >> "$F_ROOT/calls"
+case "$*" in *"install proot-distro"*) touch "$F_ROOT/proot-current" ;; esac
+exit 0

@@ -1,0 +1,46 @@
+name: Pinned downloads
+
+# Checks that every download pinned in versions.env still exists and still has
+# the expected fingerprint. Runs weekly and whenever the pins change, so a
+# network hiccup never fails an unrelated commit.
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  push:
+    branches: [main]
+    paths: [versions.env, .github/workflows/pins.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pins:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Termux app
+        run: |
+          . ./versions.env
+          curl --proto '=https' --tlsv1.2 -fsSL -o termux.apk "$TERMUX_APK_URL"
+          echo "$TERMUX_APK_SHA256  termux.apk" | sha256sum -c -
+      - name: adb for each laptop system
+        run: |
+          . ./versions.env
+          check() {
+            curl --proto '=https' --tlsv1.2 -fsSL -o "pt-$1.zip" "https://dl.google.com/android/repository/platform-tools_r$ADB_VERSION-$1.zip"
+            echo "$2  pt-$1.zip" | sha256sum -c -
+          }
+          check win "$ADB_SHA256_WIN"
+          check darwin "$ADB_SHA256_DARWIN"
+          check linux "$ADB_SHA256_LINUX"
+      - name: Linux guest image
+        run: |
+          . ./versions.env
+          repo=${GUEST_IMAGE%%:*}; digest=${GUEST_IMAGE##*@}
+          token=$(curl -fsSL "https://auth.docker.io/token?service=registry.docker.io&scope=repository:library/$repo:pull" | python3 -c 'import json,sys; print(json.load(sys.stdin)["token"])')
+          curl -fsSIL -o /dev/null -H "Authorization: Bearer $token" \
+            -H "Accept: application/vnd.oci.image.index.v1+json" \
+            "https://registry-1.docker.io/v2/library/$repo/manifests/$digest"

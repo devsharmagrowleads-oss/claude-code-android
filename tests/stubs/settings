@@ -1,0 +1,8 @@
+#!/bin/sh
+# Fake phone: Android's settings. F_SETTINGS_DENY=1 refuses writes, as some makers do.
+f=$F_ROOT/setting
+case "$1" in
+  get) cat "$f" 2>/dev/null || echo null ;;
+  put) [ "${F_SETTINGS_DENY-0}" = 1 ] && { echo "SecurityException"; exit 255; }; echo "$4" > "$f" ;;
+  delete) rm -f "$f" ;;
+esac

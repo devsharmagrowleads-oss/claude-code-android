@@ -2,12 +2,23 @@ name: CI
 
 on:
   push:
+    branches: [main]
   pull_request:
-  schedule:
-    - cron: "0 6 * * 1"   # weekly: catches download links that stop working
+
+permissions:
+  contents: read
 
 jobs:
-  tests:
+  phone-scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Phone-side scripts against a fake phone
+        run: bash tests/test-phone.sh
+
+  entry-points:
     strategy:
       fail-fast: false
       matrix:
@@ -17,11 +28,15 @@ jobs:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@v4
-      - name: Phone-side checks
-        run: bash tests/test-phone.sh
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
       - name: install.sh against a stand-in adb
+        if: runner.os != 'Windows'
         run: bash tests/test-entry.sh sh
+      - name: Phone-side scripts on macOS's shell
+        if: runner.os == 'macOS'
+        run: bash tests/test-phone.sh
       - name: install.ps1 against a stand-in adb
         if: runner.os == 'Windows'
         run: bash tests/test-entry.sh ps
@@ -29,7 +44,9 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
       - name: ShellCheck
         run: shellcheck --severity=warning install.sh uninstall.sh phone/*.sh tests/*.sh tests/fake-adb tests/stubs/*
       - name: PSScriptAnalyzer
@@ -38,16 +55,3 @@ jobs:
           $found = Invoke-ScriptAnalyzer -Path install.ps1 -Severity Error
           $found | Format-Table -AutoSize
           if ($found) { exit 1 }
-
-  links:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Pinned downloads still exist and still match
-        run: |
-          . ./versions.env
-          curl -fsSL -o termux.apk "$TERMUX_APK_URL"
-          echo "$TERMUX_APK_SHA256  termux.apk" | sha256sum -c -
-          for os in windows darwin linux; do
-            curl -fsSIL -o /dev/null "https://dl.google.com/android/repository/platform-tools-latest-$os.zip"
-          done

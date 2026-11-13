@@ -1,4 +1,4 @@
 #!/bin/sh
-# Test stand-in for df -k /data. F_FREE_KB is the free space.
+# Fake phone: df -k /data. F_FREE_KB is the free space.
 echo "Filesystem 1K-blocks Used Available Use% Mounted on"
 echo "/dev/block/dm-1 100000000 1 ${F_FREE_KB-20000000} 1% /data"

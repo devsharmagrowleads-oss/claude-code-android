@@ -1,4 +1,15 @@
 #!/bin/sh
-# Test stand-in for Android's pm. F_TERMUX: absent | foreign | broken | ours | unmarked | empty
-[ "$1" = path ] && [ "${F_TERMUX-absent}" != absent ] && echo "package:/data/app/com.termux/base.apk"
+# Fake phone: Android's pm. $F_ROOT/kind says which Termux is installed.
+kind=$(cat "$F_ROOT/kind" 2>/dev/null || echo absent)
+echo "pm $*" >> "$F_ROOT/calls"
+case "$1" in
+  path) [ "$kind" != absent ] && echo "package:/data/app/com.termux/base.apk" ;;
+  list) [ -n "${F_ADDONS-}" ] && printf 'package:%s\n' $F_ADDONS ;;
+  install)
+    if [ -n "${F_PM_FAIL-}" ]; then echo "Failure [$F_PM_FAIL]"; exit 1; fi
+    echo debug > "$F_ROOT/kind"; mkdir -p "$F_ROOT/data"; echo Success ;;
+  uninstall)
+    if [ -n "${F_UNINSTALL_FAIL-}" ]; then echo "Failure [DELETE_FAILED_INTERNAL_ERROR]"; exit 1; fi
+    echo absent > "$F_ROOT/kind"; rm -rf "$F_ROOT/data" "$F_ROOT/running"; echo Success ;;
+esac
 exit 0

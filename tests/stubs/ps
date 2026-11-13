@@ -1,0 +1,3 @@
+#!/bin/sh
+# Fake phone: ps inside Termux. $F_ROOT/ps overrides the idle default.
+if [ -f "$F_ROOT/ps" ]; then cat "$F_ROOT/ps"; else printf 'ARGS\ncom.termux\nbash -l\nps -A -o ARGS\n'; fi

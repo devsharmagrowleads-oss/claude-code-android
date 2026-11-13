@@ -75,19 +75,22 @@ If the laptop has no `adb` (the Android tool that talks to the phone), the insta
 | Change | Detail |
 |---|---|
 | Installs the Termux app | Version 0.118.3 from [Termux's GitHub releases](https://github.com/termux/termux-app/releases), checked against a fingerprint pinned in `versions.env`. Skipped if this build is already there. |
-| Updates Termux's packages and adds `proot-distro` | Only when `proot-distro` is not already installed. |
-| Adds a Linux guest named `claude-code` | Debian 13 (slim), about 600 MB, inside Termux. |
-| Installs Claude Code in that guest | With [Anthropic's own installer](https://code.claude.com/docs/en/setup). |
-| Adds a `claude` command to Termux | If Termux already had one, it is saved and restored on uninstall. |
+| Updates Termux's packages and adds `proot-distro` | Only when a current `proot-distro` is not already installed. Config files you edited are kept. |
+| Adds a Linux guest named `claude-code` | Debian 13 (slim), about 600 MB, inside Termux. The image is pinned by its digest in `versions.env`. |
+| Installs Claude Code in that guest | With [Anthropic's own installer](https://code.claude.com/docs/en/setup), downloaded over HTTPS from claude.ai. |
+| Adds a `claude` command to Termux | If Termux already had one, it is set aside untouched and put back on uninstall. |
+| Lets Termux show notifications, and wakes the screen | So Termux can unpack and open. A swipe-only lock screen is opened; a PIN or pattern is not bypassed. |
 | Adds a one-time start-up hook | A small file in Termux's `profile.d` that lets the installer open Claude Code once without typing. |
 | Keeps its notes in `~/.claude-code-android` | Inside Termux. |
-| Lifts Android's background-process limit | Android 12 and newer only. Without this, Android can stop Claude Code mid-session. |
+| Lifts Android's background-process limit | Android 12 and newer only. Without this, Android can stop Claude Code mid-session. On some phones Android resets it after a restart; running the installer again sets it back. |
 
 Your Claude settings and sign-in live in `~/.claude` in Termux, outside the guest. Your project files live wherever you put them in Termux.
 
 On the laptop, everything stays in this folder (`.tools`, `.cache`, `logs`), apart from the key adb creates in your user folder so the phone can recognise the laptop.
 
-If the phone already has Termux, the installer stops and asks before touching it. If that Termux came from the Play Store or F-Droid, it has to be replaced, which deletes everything inside it; the installer does this only after you type `REPLACE`.
+If the laptop has no adb, the copy the installer downloads from Google is a pinned version, checked against a fingerprint in `versions.env` before it is used.
+
+If the phone already has Termux, the installer stops and asks before touching it. If that Termux came from the Play Store or F-Droid, it has to be replaced, which deletes everything inside it; the installer does this only after you type `REPLACE`, and it refuses up front if Termux add-ons would block the replacement.
 
 ## Running it again
 
@@ -98,12 +101,15 @@ Running the installer again is safe. It checks what is already there, finishes a
 - Windows: double-click `uninstall.bat`.
 - macOS / Linux: `./uninstall.sh`.
 
-This removes the Linux guest, the `claude` command and the start-up hook, and puts the background-process setting back. Termux, your files and your Claude settings stay unless you type `REMOVE` when asked, which uninstalls Termux and everything in it.
+This removes the Linux guest, the `claude` command and the start-up hook, and puts the background-process setting back. Termux, your files and your Claude settings stay. If the installer was the one that installed Termux, it then offers to uninstall Termux and everything in it, which happens only if you type `REMOVE`. A Termux you had before is never offered for removal.
 
 ## Things to know
 
 > [!IMPORTANT]
-> **The Termux build used here can be read by any computer you allow for USB debugging.** It is the build from Termux's GitHub page, which is the only one a laptop can set up. With it, a computer you have tapped "Allow" for can read Termux's files, including your Claude sign-in. Switch USB debugging off when you are done (Claude Code keeps working), and only tap "Allow" on computers you trust.
+> **The Termux build used here is easier to read from outside than the Play Store one.** It is the build from Termux's GitHub page, the only one a laptop can set up. Two things follow:
+>
+> - Any computer you have tapped "Allow" for can read Termux's files over USB debugging, including your Claude sign-in. When you are done, switch USB debugging off (Claude Code keeps working), tap "Revoke USB debugging authorisations" in Developer options, and only ever tap "Allow" on computers you trust.
+> - Termux's GitHub builds are signed with a key that [Termux publishes openly](https://github.com/termux/termux-app#installation). An app signed with that key could share Termux's files, so do not install Termux add-ons or "Termux" apps from places you do not trust.
 
 - **Lifting the background-process limit** lets apps keep more background programs running, which can cost some battery. Uninstalling puts it back.
 - **It is slower than on a laptop.** Claude Code runs inside a Linux guest, which adds overhead, mostly on tasks that touch many files.
@@ -118,11 +124,12 @@ This removes the Linux guest, the `claude` command and the start-up hook, and pu
 | "The phone blocked the install" | See your brand in [docs/usb-debugging.md](docs/usb-debugging.md). |
 | Stops with a network error | Check the phone's Wi-Fi and run the installer again. It continues where it stopped. |
 | `claude` gets killed during long sessions | Developer options > switch on "Disable child process restrictions" (Android 14+), and set Termux's battery use to "Unrestricted". |
-| Anything else | Open an issue and attach the newest file from the `logs` folder. It contains the installer's messages and never your files or Claude settings. |
+| Anything else | Open an issue and attach the newest file from the `logs` folder. Read it first: it holds the installer's messages, your answers, your phone's make and model, and, after a failure, a few lines of package-manager output from the phone. It does not include your files or your Claude sign-in. |
 
 ## Status
 
 - Confirmed: Windows 10 laptop with a OnePlus Nord CE (Android 13). A fresh install took under 4 minutes on Wi-Fi.
+- Android 7 to 12 and other phone makers: written for, and covered by the automated tests, but not yet confirmed on a real phone.
 - macOS and Linux: the installer runs the same steps on the phone, and its laptop side is covered by automated tests, but it has not yet been confirmed on real hardware. Reports are welcome.
 
 ## How it works

@@ -1,9 +1,8 @@
 #!/bin/sh
-# Test stand-in for run-as. Answers the questions setup.sh asks about Termux.
-case "${F_TERMUX-absent}" in absent|foreign|broken) exit 1 ;; esac
-case "$*" in
-  *"/installed ]"*) [ "${F_INSTALLED-0}" = 1 ] ;;
-  *"[ -e files/home/.claude-code-android ]"*) [ "$F_TERMUX" = ours ] ;;
-  *"[ -x files/usr/bin/bash ]"*) [ "$F_TERMUX" != empty ] ;;
-  *) exit 0 ;;
-esac
+# Fake phone: run-as. Runs the command inside the fake Termux data directory,
+# which only works for a debuggable Termux, as on a real phone.
+[ "$(cat "$F_ROOT/kind" 2>/dev/null)" = debug ] || exit 1
+shift
+mkdir -p "$F_ROOT/data"
+cd "$F_ROOT/data" || exit 1
+exec "$@"

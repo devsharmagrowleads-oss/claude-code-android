@@ -1,4 +1,19 @@
 #!/bin/sh
-# Test stand-in for Android's am.
-[ "$1" = get-current-user ] && echo "${F_USER-0}"
+# Fake phone: Android's am. 'start' opens Termux: the first time that unpacks
+# it, and a waiting launch-once marker is consumed the way the real hook does.
+echo "am $*" >> "$F_ROOT/calls"
+case "$1" in
+  get-current-user) echo "${F_USER-0}" ;;
+  force-stop) rm -f "$F_ROOT/running" ;;
+  start)
+    d=$F_ROOT/data/files
+    [ -d "$F_ROOT/data" ] || exit 0
+    touch "$F_ROOT/running"
+    if [ ! -x "$d/usr/bin/bash" ]; then
+      mkdir -p "$d/usr/bin" "$d/usr/etc/profile.d" "$d/home"
+      printf '#!/bin/sh\nexec bash "$@"\n' > "$d/usr/bin/bash"
+      chmod 755 "$d/usr/bin/bash"
+    fi
+    [ "${F_NO_HOOK-0}" = 1 ] || rm -f "$d/home/.claude-code-android/launch-once" ;;
+esac
 exit 0

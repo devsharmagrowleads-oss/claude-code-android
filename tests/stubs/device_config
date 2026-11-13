@@ -1,0 +1,8 @@
+#!/bin/sh
+# Fake phone: Android's device_config.
+f=$F_ROOT/devcfg
+case "$1" in
+  get) cat "$f" 2>/dev/null || echo null ;;
+  put) echo "$4" > "$f" ;;
+  delete) rm -f "$f" ;;
+esac

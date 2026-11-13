@@ -1,0 +1,3 @@
+#!/bin/sh
+# Fake phone: does nothing (sleep returns at once so the tests are fast).
+exit 0
