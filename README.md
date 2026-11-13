@@ -4,10 +4,10 @@
 
 <p align="center">
   <a href="https://github.com/devsharmagrowleads-oss/claude-code-android/actions/workflows/ci.yml"><img src="https://github.com/devsharmagrowleads-oss/claude-code-android/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
-  <img src="https://img.shields.io/badge/phone-Android%207%2B-3DDC84?labelColor=0A1120" alt="Android 7 or newer">
-  <img src="https://img.shields.io/badge/laptop-Windows%20%C2%B7%20macOS%20%C2%B7%20Linux-3DDC84?labelColor=0A1120" alt="Windows, macOS and Linux">
-  <img src="https://img.shields.io/badge/root-not%20needed-3DDC84?labelColor=0A1120" alt="No root needed">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-3DDC84?labelColor=0A1120" alt="MIT license"></a>
+  <img src="https://img.shields.io/badge/phone-Android%207%2B-1E8E5A?labelColor=16233D" alt="Android 7 or newer">
+  <img src="https://img.shields.io/badge/laptop-Windows%20%C2%B7%20macOS%20%C2%B7%20Linux-1E8E5A?labelColor=16233D" alt="Windows, macOS and Linux">
+  <img src="https://img.shields.io/badge/root-not%20needed-1E8E5A?labelColor=16233D" alt="No root needed">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-1E8E5A?labelColor=16233D" alt="MIT license"></a>
 </p>
 
 <p align="center">
